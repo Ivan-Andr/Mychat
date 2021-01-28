@@ -9,15 +9,18 @@ app = Flask(__name__)
 def hello():
     return "Hello, World!"
 
+
 @app.route("/status")
 def status():
-    stat={'status': True,
+    stat = {'status': True,
             'Name': 'Mychat',
             'Time1': time.time(),
             'Time2': time.asctime(),
             'Time3': datetime.now(),
             'Time4': str(datetime.now()),
-            'Time5': datetime.now().isoformat()
+            'Time5': datetime.now().isoformat(),
+            'Time6': datetime.now().strftime('%Y/%m/%d %H:%M:%S now on server')
+
             }
     return jsonify(stat)
 
