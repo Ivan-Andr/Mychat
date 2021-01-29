@@ -1,9 +1,21 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import time
 from datetime import datetime
 
 app = Flask(__name__)
-
+# база данных с сообщениями
+db = [
+    {
+        'text': 'Hello',
+        'time': time.time(),  # возвращает количество секунд с 1 января 1970, 00:00:00 (UTC)
+        'name': 'Ivan'
+    },
+    {
+        'text': 'Hi, Ivan',
+        'time': time.time(),
+        'name': 'Ann'
+    }
+]
 
 @app.route("/")
 def hello():
@@ -23,6 +35,22 @@ def status():
 
             }
     return jsonify(stat)
+
+
+@app.route("/send")
+def send_messages():
+    #
+    return {'ok': True}
+
+
+@app.route("/messages")
+def get_messages():
+    after = request.args['after']
+    messages = []
+    for message in db:
+        if message['time'] > after:
+            messages.append(message)
+    return {'ok': True}
 
 
 app.run()
