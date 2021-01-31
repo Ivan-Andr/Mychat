@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 import time
 from datetime import datetime
 
@@ -16,6 +16,7 @@ db = [
         'name': 'Ann'
     }
 ]
+
 
 @app.route("/")
 def hello():
@@ -37,20 +38,44 @@ def status():
     return jsonify(stat)
 
 
-@app.route("/send")
+@app.route("/send", methods=['POST'])
 def send_messages():
-    #
+    if not isinstance(request.json, dict):
+        return abort(400)
+    # if 'name' not in request.json:
+    #     return abort(400)
+    # if 'text' not in request.json:
+    #     return abort(400)
+
+    name = request.json.get('name')
+    text = request.json.get('text')
+
+    if isinstance(name, str) or isinstance(text, str):
+        return abort(400)
+    if name == '' or text == '':
+        return abort(400)
+
+
+    message = {           # формируем сообщение
+        'text': text,
+        'time': time.time(),
+        'name': name
+    }
+    db.append(message)
     return {'ok': True}
 
 
 @app.route("/messages")
 def get_messages():
-    after = request.args['after']
+    try:
+        after = float(request.args['after'])
+    except:
+        return abort(400)
     messages = []
     for message in db:
         if message['time'] > after:
             messages.append(message)
-    return {'ok': True}
+    return {'messages': messages[:100]}
 
 
 app.run()
