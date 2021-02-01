@@ -42,21 +42,16 @@ def status():
 def send_messages():
     if not isinstance(request.json, dict):
         return abort(400)
-    # if 'name' not in request.json:
-    #     return abort(400)
-    # if 'text' not in request.json:
-    #     return abort(400)
 
     name = request.json.get('name')
     text = request.json.get('text')
 
-    if isinstance(name, str) or isinstance(text, str):
+    if not isinstance(name, str) or not isinstance(text, str):
         return abort(400)
     if name == '' or text == '':
         return abort(400)
 
-
-    message = {           # формируем сообщение
+    message = {  # формируем сообщение
         'text': text,
         'time': time.time(),
         'name': name
