@@ -1,13 +1,20 @@
+from datetime import time, datetime
+
 import requests
 
+
 def print_message(message):
-    print(message['time'], message['name'])
+    message_time = datetime.fromtimestamp(message['time'])
+    message_time = message_time.strftime('%Y/%m/%d %H:%M:%S')
+    print(message_time, message['name'])
     print(message['text'])
     print()
+
 
 def print_messages(db):
     for message in db:
         print_message(message)
+
 
 after = 0
 while True:
@@ -15,4 +22,9 @@ while True:
                             params={'after': after})
     messages = response.json()['messages']
     print_messages(messages)
+    for message in messages:
+        print_message(message)
+        after=message['time']
+
+    time.sleep(1)
 
