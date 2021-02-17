@@ -24,7 +24,6 @@ while True:
     print_messages(messages)
     for message in messages:
         print_message(message)
-        after=message['time']
+        after = message['time']
 
     time.sleep(1)
-
